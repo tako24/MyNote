@@ -6,38 +6,49 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class UINote : MonoBehaviour//, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UINote : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TextMeshProUGUI uiText;
     [SerializeField] private TextMeshProUGUI uiDateTime;
     [SerializeField] private Toggle uiCheckBox;
-    private Note noteInfo;
-    private int mainMenuTextLeanght = 50;
-    public string NoteText => noteInfo.Text;
+    
+    private UIController _controller;
+    private Note _noteInfo;
+    private const int MainMenuTextLenght = 50;
+    public string NoteText => _noteInfo.Text;
     public Note NoteInfo
     {
         set
         {
-            noteInfo = value;
+            _noteInfo = value;
             Refresh();
         }
-        
+        get => _noteInfo;
     }
     
+    private void Awake()
+    {
+        _controller= GetComponentInParent<UIController>();
+        NoteInfo = new Note("Новая заметка");
+    }
+
+    public void DeleteNote() =>
+        _controller.RemoveNote(this);
+    
+    public void OnPointerClick(PointerEventData eventData)=>
+        _controller.OpenEditingPanel(this);
     
     public void Refresh()
     {
-        if (noteInfo ==null)
+        if (_noteInfo ==null)
             return;
-        if (noteInfo.Text.Length > mainMenuTextLeanght)
-            uiText.text = noteInfo.Text.Substring(0, mainMenuTextLeanght) + "...";
-        else
-            uiText.text = noteInfo.Text;
-        uiDateTime.text = noteInfo.CreationDate.ToString("dddd, dd MMMM yyyy");
-        uiCheckBox.isOn = noteInfo.IsDone;
-    }
-    public void CleanUp()
-    {
         
+        if (_noteInfo.Text.Length > MainMenuTextLenght)
+            uiText.text = _noteInfo.Text[..MainMenuTextLenght] + "...";
+        else
+            uiText.text = _noteInfo.Text;
+        
+        uiDateTime.text = _noteInfo.CreationDate;
+        uiCheckBox.isOn = _noteInfo.IsDone;
     }
 }

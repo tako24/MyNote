@@ -1,18 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class Note 
+[Serializable]
+public class Note
 {
-    public string Text { get; }
-    public DateTime CreationDate { get;  }
-    public bool IsDone { get;  }
-
+    public string Text;
+    public string CreationDate;
+    public bool IsDone;
     public Note(string text)
     {
         Text = text;
         IsDone = false;
-        CreationDate = DateTime.Now;
+        CreationDate = DateTime.Now.ToString("dddd, dd MMMM yyyy");
     }
+    
 }

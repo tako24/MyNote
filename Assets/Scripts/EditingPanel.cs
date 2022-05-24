@@ -6,17 +6,19 @@ using UnityEngine;
 public class EditingPanel : MonoBehaviour
 {
     [SerializeField] private TMP_InputField inputField;
-    private UISlot selectedSlot;
+    private UINote _selectedNote;
 
-    public void StartEditing(UISlot slot)
+    public void StartEditing(UINote note)
     {
-        selectedSlot = slot;
-        inputField.text = slot.NoteText;
+        if (note == null) Debug.Log("note is null");
+        if (note.NoteInfo == null) Debug.Log("noteinfo is null");
+        _selectedNote = note;
+        inputField.text = note.NoteText;
     }
     public void EditNote()
     {
-        selectedSlot.SetNote(new Note(inputField.text));
-        selectedSlot.Refresh();
+        _selectedNote.NoteInfo =new Note(inputField.text);
+        _selectedNote.Refresh();
         this.gameObject.SetActive(false);
     }
     

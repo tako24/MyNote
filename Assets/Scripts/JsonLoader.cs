@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using System.IO;
 using System.Linq;
 
@@ -22,6 +19,7 @@ public class JsonLoader
     {
         File.WriteAllText(Application.streamingAssetsPath + fileName,JsonHelper.ToJson(notes.ToArray(), true));
     }
+    
     public List<Note> Load()
     {
         var jsonText = File.ReadAllText(Application.streamingAssetsPath + fileName);

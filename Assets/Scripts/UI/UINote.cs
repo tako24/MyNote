@@ -5,12 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public class UINote : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TextMeshProUGUI uiText;
     [SerializeField] private TextMeshProUGUI uiDateTime;
-    [SerializeField] private Toggle uiCheckBox;
+    [SerializeField] private Button deleteNote;
     
     private UIController _controller;
     private Note _noteInfo;
@@ -49,6 +50,5 @@ public class UINote : MonoBehaviour, IPointerClickHandler
             uiText.text = _noteInfo.Text;
         
         uiDateTime.text = _noteInfo.CreationDate;
-        uiCheckBox.isOn = _noteInfo.IsDone;
     }
 }

@@ -21,10 +21,15 @@ public class UIController : MonoBehaviour
         try
         {
             var savedNotes = JsonLoader.GetInstance().Load();
+            
+            if (savedNotes.Count == 0)
+                AddNote(new Note("Добавить новую заметку"));
+            
             foreach (var note in savedNotes)
             {
                 AddNote(note);
             }
+            
         }
         catch (Exception e)
         {
@@ -33,11 +38,32 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void RemoveNote( UINote note)
+    private void Save()
     {
-        _notes.Remove(note );
-        Destroy(note.gameObject);
+        if ( _notes ==null || _notes.Count == 0 )
+            return;
+        
+        var notes = new List<Note>();
+        foreach (var note in _notes)
+        {
+            notes.Add(note.NoteInfo);
+        }
+        JsonLoader.GetInstance().Save(notes);
     }
+    private void OnApplicationQuit()=>
+        Save();
+    
+    private void OnApplicationFocus(bool hasFocus)=>
+        Save();
+    
+    
+    private void AddNote(Note note)
+    {
+        var uiNote =  Instantiate(notePrefab, this.transform).GetComponent<UINote>();
+        uiNote.NoteInfo = note;
+        _notes.Add( uiNote);
+    }
+    
     public void AddNote()
     {
         var uiNote =  Instantiate(notePrefab, this.transform).GetComponent<UINote>();
@@ -45,11 +71,11 @@ public class UIController : MonoBehaviour
         _notes.Add( uiNote);
         OpenEditingPanel(uiNote);
     }
-    private void AddNote(Note note)
+    
+    public void RemoveNote( UINote note)
     {
-        var uiNote =  Instantiate(notePrefab, this.transform).GetComponent<UINote>();
-        uiNote.NoteInfo = note;
-        _notes.Add( uiNote);
+        _notes.Remove(note );
+        Destroy(note.gameObject);
     }
 
     public void OpenEditingPanel(UINote note)
@@ -58,13 +84,5 @@ public class UIController : MonoBehaviour
         editingPanel.StartEditing(note);
     }
 
-    private void OnApplicationQuit()
-    {
-        var notes = new List<Note>();
-        foreach (var note in _notes)
-        {
-            notes.Add(note.NoteInfo);
-        }
-        JsonLoader.GetInstance().Save(notes);
-    }
+
 }
